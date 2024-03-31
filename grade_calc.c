@@ -2,13 +2,14 @@
 #include <stdlib.h>
 #include "functions.h"
 
-void grade_calc(float ISA1marks[10][10], float ISA2marks[10][10], float ESAmarks[10][10], char grade[10])
+void grade_calc(float ISA1marks[10][3], float ISA2marks[10][3], float ESAmarks[10][3], char grade[10])
 {
     float ISA_agg[10][3];
     float ESA_agg[10][3];
     float total[10][3];
     float fin_grade[10];
-    for (int i = 0; i < 2; i++) // change to 10 later
+
+    for (int i = 0; i < 10; i++)
     {
         for (int j = 0; j < 3; j++)
         {
@@ -19,7 +20,7 @@ void grade_calc(float ISA1marks[10][10], float ISA2marks[10][10], float ESAmarks
         fin_grade[i] = (total[i][1] + total[i][2] + total[i][3]);
     }
 
-    for (int a = 0; a < 2; a++) // 10
+    for (int a = 0; a < 10; a++)
     {
         if (fin_grade[a] >= 90)
             grade[a] = 'S';
