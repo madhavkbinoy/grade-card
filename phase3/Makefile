@@ -14,5 +14,8 @@ main.o: main.c functions.h
 functions.o: functions.c functions.h
 	$(CC) $(CFLAGS) -c functions.c
 
+run: $(TARGET)
+	./$(TARGET)
+
 clean:
 	del $(TARGET).exe $(OBJS)
