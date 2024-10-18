@@ -176,12 +176,14 @@ void SGPA(student *stu, int n)
 
 void WriteToFile(student *stu, int n)
 {
-    fp = fopen("student_data.csv", "a"); 
+    fp = fopen("student_data.csv", "w");
     if (fp == NULL)
     {
         printf("Error opening file!\n");
         return;
     }
+
+    fprintf(fp, "Name,Roll_Number,Sem,ISA1_S1,ISA2_S1,Internals_S1,ESA_S1,ISA1_S2,ISA2_S2,Internals_S2,ESA_S2,ISA1_S3,ISA2_S3,Internals_S3,ESA_S3,SGPA\n");
 
     for (int i = 0; i < n; i++)
     {
@@ -207,135 +209,66 @@ void ReadFromFile(student *stu, int n)
     }
 
     char buffer[1024];
-    fgets(buffer, sizeof(buffer), fp); 
+    int row = 0;
 
-    printf("\nStudent Records:\n");
-    printf("--------------------------------------------------------------------\n");
-    printf("Name\t\tRoll Number\tSemester\tSGPA\n");
-    printf("--------------------------------------------------------------------\n");
+    fgets(buffer, sizeof(buffer), fp);
 
-    while (fgets(buffer, sizeof(buffer), fp))
+    while (fgets(buffer, sizeof(buffer), fp) && row < n)
     {
-        char name[30], roll_no[20];
-        int sem;
-        float sgpa;
+        stu[row].name = malloc(30 * sizeof(char));
+        stu[row].roll_no = malloc(20 * sizeof(char));
+        stu[row].isa1 = malloc(3 * sizeof(int));
+        stu[row].isa2 = malloc(3 * sizeof(int));
+        stu[row].internals = malloc(3 * sizeof(int));
+        stu[row].esa = malloc(3 * sizeof(int));
+        stu[row].tot_marks = malloc(3 * sizeof(float));
 
-        sscanf(buffer, "%29[^,],%19[^,],%d,%*d,%*d,%*d,%*d,%*d,%*d,%*d,%*d,%*d,%*d,%*d,%*d,%f",
-               name, roll_no, &sem, &sgpa);
-        printf("%-30s %-20s %-10d %.2f\n", name, roll_no, sem, sgpa);
+        sscanf(buffer, "%29[^,],%19[^,],%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%f",
+               stu[row].name,
+               stu[row].roll_no,
+               &stu[row].sem,
+               &stu[row].isa1[0], &stu[row].isa2[0], &stu[row].internals[0], &stu[row].esa[0],
+               &stu[row].isa1[1], &stu[row].isa2[1], &stu[row].internals[1], &stu[row].esa[1],
+               &stu[row].isa1[2], &stu[row].isa2[2], &stu[row].internals[2], &stu[row].esa[2],
+               &stu[row].sgpa);
+        row++;
     }
 
-    printf("--------------------------------------------------------------------\n");
     fclose(fp);
 }
 
 
-void ViewRecords()
+void display_gradecard(student *stu, int n)
 {
-    fp = fopen("student_data.csv", "r");
-    if (fp == NULL)
+    int input;
+    printf("Choose the grade card to be printed (1 - %d):\n", n);
+    for (int i = 0; i < n; i++)
     {
-        printf("Error opening file!\n");
-        return;
+        printf("%d. %s\n", i + 1, stu[i].name);
     }
-
-    char buffer[1024];
-    fgets(buffer, sizeof(buffer), fp); 
-
-    printf("\nAll Student Records:\n");
-    printf("--------------------------------------------------------------------\n");
-    printf("Name\t\tRoll Number\tSemester\tSGPA\n");
-    printf("--------------------------------------------------------------------\n");
-
-    while (fgets(buffer, sizeof(buffer), fp))
+    scanf("%d", &input);
+    if (input >= 1 && input <= n)
     {
-        char name[30], roll_no[20];
-        int sem;
-        float sgpa;
-
-        sscanf(buffer, "%29[^,],%19[^,],%d,%*d,%*d,%*d,%*d,%*d,%*d,%*d,%*d,%*d,%*d,%*d,%*d,%f",
-               name, roll_no, &sem, &sgpa);
-        printf("%-30s %-20s %-10d %.2f\n", name, roll_no, sem, sgpa);
+        input--;
+        printf("\n");
+        printf("====================================================================\n");
+        printf("\t\t\t    GRADE CARD\n");
+        printf("Name: %-30s\n", stu[input].name);
+        printf("Semester: %-10d\n", stu[input].sem);
+        printf("Roll No.: %-20s\n", stu[input].roll_no);
+        printf("--------------------------------------------------------------------\n");
+        printf("SGPA: %.2f\n", stu[input].sgpa);
+        printf("--------------------------------------------------------------------\n");
+        printf("Subject\t\tISA1\tISA2\tInternals\tESA\n");
+        printf("--------------------------------------------------------------------\n");
+        for (int i = 0; i < 3; i++)
+        {
+            printf("%s\t\t%d\t%d\t%d\t\t%d\n", stu[input].sub[i], stu[input].isa1[i], stu[input].isa2[i], stu[input].internals[i], stu[input].esa[i]);
+        }
+        printf("====================================================================\n");
     }
-
-    printf("--------------------------------------------------------------------\n");
-    fclose(fp);
-}
-
-
-void ModifyRecord()
-{
-    
-    FILE *file = fopen("student_data.csv", "r");
-    if (file == NULL)
+    else
     {
-        printf("Error opening file!\n");
-        return;
+        printf("Invalid number! Please enter a valid number\n");
     }
-
-    char buffer[1024];
-    fgets(buffer, sizeof(buffer), file); 
-
-    
-    char records[100][1024]; 
-    int count = 0;
-
-    while (fgets(buffer, sizeof(buffer), file))
-    {
-        strcpy(records[count++], buffer);
-    }
-    fclose(file);
-
-    
-    printf("\nExisting Records:\n");
-    for (int i = 0; i < count; i++)
-    {
-        printf("%d: %s", i + 1, records[i]);
-    }
-
-    int record_num;
-    printf("Enter the record number to modify: ");
-    scanf("%d", &record_num);
-    if (record_num < 1 || record_num > count)
-    {
-        printf("Invalid record number!\n");
-        return;
-    }
-
-    
-    printf("Enter new details (name, roll number, semester):\n");
-    char new_name[30], new_roll_no[20];
-    int new_sem;
-
-    getchar(); 
-    printf("Name: ");
-    fgets(new_name, 30, stdin);
-    new_name[strcspn(new_name, "\n")] = 0; 
-
-    printf("Roll Number: ");
-    fgets(new_roll_no, 20, stdin);
-    new_roll_no[strcspn(new_roll_no, "\n")] = 0; 
-
-    printf("Semester: ");
-    scanf("%d", &new_sem);
-
-    
-    sprintf(records[record_num - 1], "%s,%s,%d,%s\n",
-            new_name, new_roll_no, new_sem, records[record_num - 1] + strlen(records[record_num - 1]) - 9); // Keep the SGPA and marks
-
-    
-    file = fopen("student_data.csv", "w");
-    if (file == NULL)
-    {
-        printf("Error opening file!\n");
-        return;
-    }
-    fprintf(file, "Name,Roll_Number,Sem,ISA1_S1,ISA2_S1,Internals_S1,ESA_S1,ISA1_S2,ISA2_S2,Internals_S2,ESA_S2,ISA1_S3,ISA2_S3,Internals_S3,ESA_S3,SGPA\n");
-    for (int i = 0; i < count; i++)
-    {
-        fputs(records[i], file);
-    }
-    fclose(file);
-
-    printf("Record modified successfully!\n");
 }
