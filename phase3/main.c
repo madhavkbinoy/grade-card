@@ -3,6 +3,10 @@
 #include <string.h>
 #include "functions.h"
 
+
+void ViewRecords(student *students, int n);
+void ModifyRecord(student *students, int n);
+
 int main()
 {
     int n;
@@ -21,7 +25,11 @@ int main()
     do
     {
         printf("Select an option: \n");
-        printf("1. Enter student details and marks\n2. Display the gradecard of the student\n3. Exit\n");
+        printf("1. Enter student details and marks\n");
+        printf("2. Display the gradecard of the student\n");
+        printf("3. View all student records\n");
+        printf("4. Modify a student record\n");
+        printf("5. Exit\n");
         scanf("%d", &choice);
         switch (choice)
         {
@@ -40,13 +48,24 @@ int main()
             ReadFromFile(students, n);
             display_gradecard(students, n);
             break;
+
         case 3:
+            ViewRecords(students, n); 
             break;
+
+        case 4:
+            ModifyRecord(students, n); 
+            break;
+
+        case 5:
+            break;
+
         default:
             printf("Invalid option.\n");
         }
-    } while (choice != 3);
+    } while (choice != 5);
 
+    
     for (int i = 0; i < n; i++)
     {
         free(students[i].name);
@@ -60,4 +79,42 @@ int main()
     free(students);
 
     return 0;
+}
+
+
+void ViewRecords(student *students, int n)
+{
+    printf("Student Records:\n");
+    printf("-----------------------------------------------------------\n");
+    for (int i = 0; i < n; i++)
+    {
+        printf("Name: %s, Roll No: %s, Semester: %d, SGPA: %.2f\n", 
+               students[i].name, students[i].roll_no, students[i].sem, students[i].sgpa);
+    }
+    printf("-----------------------------------------------------------\n");
+}
+
+
+void ModifyRecord(student *students, int n)
+{
+    int index;
+    printf("Enter the index of the student record to modify (1 - %d): ", n);
+    scanf("%d", &index);
+    
+    if (index < 1 || index > n)
+    {
+        printf("Invalid index.\n");
+        return;
+    }
+
+    index--; 
+    printf("Modifying record for %s (Roll No: %s)\n", students[index].name, students[index].roll_no);
+    
+    
+    printf("Enter new name: ");
+    scanf("%s", students[index].name);
+    printf("Enter new roll number: ");
+    scanf("%s", students[index].roll_no);
+    
+    
 }
