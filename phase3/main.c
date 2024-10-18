@@ -21,7 +21,7 @@ int main()
     do
     {
         printf("Select an option: \n");
-        printf("1. Enter student details and marks\n2. Display the gradecard of the student\n3. Exit\n");
+        printf("1. Enter student details and marks\n2. Display the gradecard of the student\n3. View all student records\n4. Modify a student record\n5. Exit\n");
         scanf("%d", &choice);
         switch (choice)
         {
@@ -41,11 +41,17 @@ int main()
             display_gradecard(students, n);
             break;
         case 3:
+            ViewRecords(); 
+            break;
+        case 4:
+            ModifyRecord(); 
+            break;
+        case 5:
             break;
         default:
             printf("Invalid option.\n");
         }
-    } while (choice != 3);
+    } while (choice != 5);
 
     for (int i = 0; i < n; i++)
     {

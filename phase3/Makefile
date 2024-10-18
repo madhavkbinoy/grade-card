@@ -1,21 +1,13 @@
-CC = gcc
-CFLAGS = -Wall -Wextra -Werror
-TARGET = grade_card
-OBJS = main.o functions.o
+CC=gcc
+CFLAGS=-I.
+DEPS = functions.h
+OBJ = main.o functions.o
 
-all: $(TARGET)
+%.o: %.c $(DEPS)
+	$(CC) -c -o $@ $< $(CFLAGS)
 
-$(TARGET): $(OBJS)
-	$(CC) $(CFLAGS) -o $(TARGET) $(OBJS)
-
-main.o: main.c functions.h
-	$(CC) $(CFLAGS) -c main.c
-
-functions.o: functions.c functions.h
-	$(CC) $(CFLAGS) -c functions.c
-
-run: $(TARGET)
-	./$(TARGET)
+student_management: $(OBJ)
+	$(CC) -o $@ $^ $(CFLAGS)
 
 clean:
-	del $(TARGET).exe $(OBJS)
+	rm -f *.o student_management
