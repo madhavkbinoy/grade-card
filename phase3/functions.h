@@ -1,19 +1,20 @@
+
 #ifndef FUNCTIONS_H
 #define FUNCTIONS_H
 
-typedef struct
-{
+
+typedef struct {
     char *name;
     char *roll_no;
     int sem;
+    char sub[3][30];  
+    int credit[3];
     int *isa1;
     int *isa2;
     int *internals;
     int *esa;
     float *tot_marks;
     float sgpa;
-    char sub[3][30];
-    int credit[3];
 } student;
 
 
@@ -28,7 +29,6 @@ void total_marks(student *stu, int n);
 void SGPA(student *stu, int n);
 void WriteToFile(student *stu, int n);
 void ReadFromFile(student *stu, int n);
-void ViewRecords();
-void ModifyRecord();
+void display_gradecard(student *stu, int n);  
 
 #endif 
